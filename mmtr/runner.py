@@ -60,7 +60,7 @@ class Runner(object):
     def process_task(self, runner, task):
         ''' Run each task that matches the event pattern '''
         try:
-            results = runner(task)
+            results = runner(task['data'])
         except Exception as err:
             data = {'$set': {
                 'status': self.STATUS_FAILED,
@@ -70,8 +70,9 @@ class Runner(object):
             return
         data = {'$set': {
             'status': self.STATUS_COMPLETE,
-            'results': results
+            'results': {"results": results}
         }}
+        self.collection.update({'_id': task['_id']}, data)
 
     def _build_query(self):
         ''' Build an event query from the added tasks '''
