@@ -43,8 +43,7 @@ class Runner(object):
             if task:
                 to_run = filter(lambda k: re.match(k['pattern'],
                                 task['event']), self.tasks)
-                for i in to_run:
-                    self.process_task(i['callback'], task)
+                self.process_tasks(to_run, task)
                 time.sleep(10)
             else:
                 time.sleep(15)
@@ -57,20 +56,28 @@ class Runner(object):
                                               new=True)
         return res
 
-    def process_task(self, runner, task):
+    def process_tasks(self, runners, task):
         ''' Run each task that matches the event pattern '''
-        try:
-            results = runner(task['data'])
-        except Exception as err:
-            data = {'$set': {
-                'status': self.STATUS_FAILED,
-                'error': str(err)
-            }}
-            self.collection.update({'_id': task['_id']}, data)
-            return
+        all_results = []
+        for i in runners:
+            res = {
+                'callback': i['callback'].__name__,
+                'status': None,
+                'result': None
+            }
+            runner = i['callback']
+            try:
+                results = runner(task['data'])
+            except Exception as err:
+                res['status'] = self.STATUS_FAILED
+                res['result'] = str(err)
+            else:
+                res['status'] = self.STATUS_COMPLETE
+                res['result'] = results
+            all_results.append(res)
         data = {'$set': {
             'status': self.STATUS_COMPLETE,
-            'results': {"results": results}
+            'results': {"results": all_results}
         }}
         self.collection.update({'_id': task['_id']}, data)
 
