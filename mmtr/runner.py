@@ -74,7 +74,8 @@ class Runner(object):
             else:
                 res['status'] = self.STATUS_COMPLETE
                 res['result'] = results
-            all_results.append(res)
+            if res['result'] is not None:
+                all_results.append(res)
         data = {'$set': {
             'status': self.STATUS_COMPLETE,
             'results': {"results": all_results}
