@@ -3,6 +3,7 @@
 
 import wrapt
 import functools
+import signal
 from mmtr import runner
 
 _current_app = runner.Runner()
@@ -22,4 +23,11 @@ def task(wrapped=None, event=None):
     _current_app.add_task(out, event)
     return out
 
+
+def _stop(*args):
+    _current_app.running = False
+
+
+signal.signal(signal.SIGINT, _stop)
+signal.signal(signal.SIGTERM, _stop)
 run = _current_app.run
