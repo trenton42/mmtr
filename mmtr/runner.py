@@ -31,8 +31,12 @@ class Runner(object):
         database = con[self.config.database]
         self.collection = database[self.config.collection]
 
-    def run(self):
+    def run(self, idle_seconds=None, task_seconds=None):
         ''' Start running and polling for events to handle '''
+        if not isinstance(idle_seconds, int):
+            idle_seconds = 10
+        if not isinstance(task_seconds, int):
+            idle_seconds = 5
         if not self.tasks:
             print "No tasks added. Exiting."
             return 1
@@ -44,9 +48,9 @@ class Runner(object):
                 to_run = filter(lambda k: re.match(k['pattern'],
                                 task['event']), self.tasks)
                 self.process_tasks(to_run, task)
-                time.sleep(10)
+                time.sleep(task_seconds)
             else:
-                time.sleep(15)
+                time.sleep(idle_seconds)
 
     def get_task(self, query):
         ''' Get the next task from the database (if any) '''
