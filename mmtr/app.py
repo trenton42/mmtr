@@ -16,7 +16,7 @@ def task(wrapped=None, event=None):
     @wrapt.decorator
     def wrapper(wrapped, instance, args, kwargs):
         body = args[0]
-        response = wrapped(body)
+        response = wrapped(body, **kwargs)
         return response
 
     out = wrapper(wrapped)

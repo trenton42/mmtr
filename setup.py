@@ -19,8 +19,8 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='mmtr',
-    version='0.1.0',
-    description='Mongo based simple task runner',
+    version='0.2.0',
+    description='RabbitMQ based simple task runner',
     long_description=readme + '\n\n' + history,
     author='Trenton Broughton',
     author_email='trenton@ikso.us',
@@ -31,7 +31,7 @@ setup(
     package_dir={'mmtr': 'mmtr'},
     include_package_data=True,
     install_requires=[
-        'pymongo',
+        'pika',
         'wrapt'
     ],
     license="BSD",
