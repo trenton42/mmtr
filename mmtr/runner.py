@@ -102,7 +102,7 @@ class Runner(object):
                                        properties=pika.BasicProperties(correlation_id=props.correlation_id),
                                        body=body)
             print task['method'].delivery_tag
-            self.channel.basic_ack(delivery_tag=task['method'].delivery_tag)
+        self.channel.basic_ack(delivery_tag=task['method'].delivery_tag)
 
     def _check_pattern(self, pattern):
         ''' Check that a pattern is a valid routing key '''
