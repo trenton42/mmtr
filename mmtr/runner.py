@@ -28,7 +28,7 @@ class Runner(object):
         self.config
         '''
         credentials = pika.PlainCredentials(_configuration.user, _configuration.password)
-        con = pika.ConnectionParameters(host=_configuration.host,
+        con = pika.ConnectionParameters(host=_configuration.host, port=_configuration.port,
                                         credentials=credentials)
         connection = pika.BlockingConnection(con)
         self.channel = connection.channel()
